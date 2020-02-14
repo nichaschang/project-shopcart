@@ -248,8 +248,6 @@ error_reporting(0); //忽略錯誤
                             <li class="active"><a href="outlist.php">等待出貨單</a></li>
                             <li><a href="outlist3.php">已完成出貨單</a></li>
                             <li><a href="returnlist.php">申請退貨單</a></li>
-                            <li><a href="paymentType.php">付款方式編輯</a></li>
-                            
                         </ul>
                     </li>
                 </ul>

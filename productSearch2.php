@@ -6,39 +6,6 @@ if(isset($_POST['csId'])){
 }
 require_once("./db.inc.php");
 ?>
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
-    </script>
-    <script>
-    $(document).ready(function(){
-            $(document).on("click","button#join_btnS",function(){
-                $.ajax({
-                    method:'POST',
-                    url:"productSearch.php",
-                    data:{
-                        "pId":$('#pId').html(),
-                    }
-                })
-            })
-        });//TODO 抓取產品ID
-
-        
-    </script>
-</head>
-<body>
-<form name="myForm" method="POST" action="">
-<input type="text" id="pId" name="pId" value="">
-<button id="join_btnS">搜尋</button>
-</form>
-</body>
-</html>
------------------------------------ -->
 <!DOCTYPE html>
 <html>
 
@@ -171,7 +138,6 @@ require_once("./db.inc.php");
                             <li class="active"><a href="outlist.php">等待出貨單</a></li>
                             <li><a href="outlist3.php">已完成出貨單</a></li>
                             <li><a href="returnlist.php">申請退貨單</a></li>
-                            <li><a href="paymentType.php">付款方式編輯</a></li>
                         </ul>
                     </li>
                 </ul>

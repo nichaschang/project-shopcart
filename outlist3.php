@@ -89,8 +89,8 @@ if(isset($_POST['csId'])){
                }
                td {
                 padding:15px;
-                /* border:1px solid #eee; */
                }
+
                input {
                    border:1px solid #eee;
                    text-align:center;
@@ -107,9 +107,6 @@ if(isset($_POST['csId'])){
                .f-right{
                    float:right;
                    margin-right:30px;
-               }
-               #check_out a{
-                color:#000;
                }
                .color {
                    background: #eee;
@@ -158,7 +155,6 @@ if(isset($_POST['csId'])){
                             <li class="active"><a href="outlist.php">等待出貨單</a></li>
                             <li><a href="outlist3.php">已完成出貨單</a></li>
                             <li><a href="returnlist.php">申請退貨單</a></li>
-                            <li><a href="paymentType.php">付款方式編輯</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -235,7 +231,7 @@ if(isset($_POST['csId'])){
     if($stmt->rowCount() > 0){
             $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-            ?>           -->
+            ?>
         <table>
             <thead>
                 <tr>

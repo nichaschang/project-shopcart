@@ -179,7 +179,6 @@ if(isset($_POST['csId'])){
                             <li class="active"><a href="outlist.php">等待出貨單</a></li>
                             <li><a href="outlist3.php">已完成出貨單</a></li>
                             <li><a href="returnlist.php">申請退貨單</a></li>
-                            <li><a href="paymentType.php">付款方式編輯</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -247,14 +246,8 @@ if(isset($_POST['csId'])){
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label class="col-form-label" for="order_id">會員ID</label>
+                                                <label class="col-form-label" for="order_id">訂單ID</label>
                                                 <input type="text" id="order_id" name="order_id" value="" placeholder="Order ID" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label class="col-form-label" for="status">訂單狀態</label>
-                                                <input type="text" id="status" name="status" value="" placeholder="Status" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
@@ -272,11 +265,7 @@ if(isset($_POST['csId'])){
             <div class="ibox-content">
             <?php
     // 呼叫所有待出貨資料
-    $sql="SELECT `payment`.`paymentId`,`payment`.`paymentName`,`payment`.`paymentCName`,`orderlist`.`orderId`,`orderlist`.`csId`,`orderlist`.`total`,`orderlist`.`paymentType`,`orderlist`.`orderStatus`,`orderlist`.`outStatus`,`orderlist`.`created_at` 
-    FROM `orderlist` INNER JOIN `payment` 
-    WHERE `outStatus`='待出貨' 
-    AND  `orderlist`.`paymentType`=`payment`.`paymentName`
-    ORDER BY `orderlist`.`created_at` ASC ";
+    $sql="SELECT * FROM `orderlist` WHERE `outStatus`='待出貨' ORDER BY `orderlist`.`created_at` ASC ";
 
     //TODO 獲取使用者id
     $stmt = $pdo->prepare($sql);
@@ -299,7 +288,6 @@ if(isset($_POST['csId'])){
                             <th data-hide="phone">總金額</th>
                             <th data-hide="phone">購買時間</th>
                             <th data-hide="phone">付款方式</th>
-                            <th data-hide="phone">訂單狀態</th>
                             <th data-hide="phone">訂單內容</th>
                             <th data-hide="phone">確認出貨</th>
                         </tr>
@@ -317,8 +305,7 @@ if(isset($_POST['csId'])){
                             <td name='orderId'' class='orderId minWidth'><?php echo $arr[$i]['orderId'];?></td>
                             <td><?php echo $arr[$i]['total'];?></td>
                             <td  name='created_at' class='created_at'><?php echo $arr[$i]['created_at']; ?></td>
-                            <td name='paymentType' class='paymentType'><?php echo $arr[$i]['paymentCName']; ?></td>
-                            <td name='orderStatus' class='orderStatus'><?php echo $arr[$i]['outStatus']; ?></td>
+                            <td name='paymentType' class='paymentType'><?php echo $arr[$i]['paymentType']; ?></td> 
                             <td>
                                 <a href="./outdetail.php?orderId=<?php echo $arr[$i]['orderId'];?>" class="btn btn-success order_detail">訂單內容</a>
                             </td>

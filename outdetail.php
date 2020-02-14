@@ -130,7 +130,7 @@ $_SESSION['orderId']=$_GET['orderId'];
                             <li class="active"><a href="outlist.php">待出貨單</a></li>
                             <li><a href="outlist3.php">已完成出貨單</a></li>
                             <li><a href="returnlist.php">申請退貨單</a></li>
-                            <li><a href="paymentType.php">付款方式編輯</a></li>
+                            
                         </ul>
                     </li>
                 </ul>
@@ -194,7 +194,7 @@ $_SESSION['orderId']=$_GET['orderId'];
 
     <?php
     // 呼叫該訂單編號的產品及購買人資料
-    $sql="SELECT `orderdetail`.`orderId`,`orderlist`.`orderId`,`orderlist`.`orderId`,`orderdetail`.`orderId`,`orderdetail`.`pId`,`product`.`pId`,`orderlist`.`created_at`,`product`.`price`,`orderdetail`.`count`,`orderStatus`,`total`,`product`.`pName`,`customer`.`csName`,`customer`.`csAdress`,`customer`.`csPhone`
+    $sql="SELECT `orderdetail`.`orderId`,`orderlist`.`orderId`,`orderlist`.`orderId`,`orderdetail`.`orderId`,`orderdetail`.`pId`,`product`.`pId`,`orderlist`.`created_at`,`product`.`price`,`orderdetail`.`count`,`total`,`product`.`pName`,`customer`.`csName`,`customer`.`csAdress`,`customer`.`csPhone`
     FROM `orderlist` INNER JOIN `orderdetail` JOIN `product` JOIN  `customer`
     WHERE `orderdetail`.`orderId`=?
     AND `orderlist`.`orderId`=`orderdetail`.`orderId` AND `orderdetail`.`pId` = `product`.`pId` AND `customer`.`csId`=`orderlist`.`csId`";

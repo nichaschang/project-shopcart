@@ -72,9 +72,11 @@ if(isset($_POST['csId'])){
         $(this).closest("tbody").find("tr").show();
         $(this).closest("tbody").find(".returnId").css("border-left","6px solid #f35");
         $(this).closest("tbody").find(".itemInfo").css("border-left","6px solid #f55");
-        let x=$(this).closest("tr").nextAll().find("span");
-        let z=$(this).closest("tr").nextAll().find("span:not('.sCount')");
+        let x=$(this).closest("tr").nextAll().find(".sCount");
+        let z=$(this).closest("tr").nextAll().find(".returnPay");
         total=0;
+        console.log('x',x)
+        console.log('z',z)
             x.each(function(i,v){
                 z.html(0)
                 let y=$(this).html()*1;
@@ -125,9 +127,6 @@ if(isset($_POST['csId'])){
                .f-right{
                    float:right;
                    margin-right:30px;
-               }
-               #check_out a{
-                color:#000;
                }
                .color {
                    background: #999;
@@ -201,8 +200,6 @@ if(isset($_POST['csId'])){
                             <li class="active"><a href="outlist.php">等待出貨單</a></li>
                             <li><a href="outlist3.php">已完成出貨單</a></li>
                             <li><a href="returnlist.php">申請退貨單</a></li>
-                            <li><a href="paymentType.php">付款方式編輯</a></li>
-                            
                         </ul>
                     </li>
                 </ul>
@@ -279,7 +276,7 @@ if(isset($_POST['csId'])){
                         </thead>
                         <?php
                         // 呼叫退貨申請單
-                        $sql_returnlist="SELECT * FROM `returnlist` INNER JOIN `returndetail` WHERE`returndetail`.`returnlistId`=`returnlist`.`returnlistId` GROUP BY `returndetail`.`returnlistId`";
+                        $sql_returnlist="SELECT * FROM `returnlist` INNER JOIN `returndetail` WHERE`returndetail`.`returnId`=`returnlist`.`returnId` GROUP BY `returndetail`.`returnId`";
                         
                         $stmt=$pdo->prepare($sql_returnlist);
                         $stmt->execute();
@@ -287,9 +284,9 @@ if(isset($_POST['csId'])){
                         
                             <?php
                         for($i=0;$i<count($arr);$i++){
-                            $sql_returnItem="SELECT * FROM `returndetail` INNER JOIN `product` WHERE `returnlistId`=? AND `returndetail`.`pId`=`product`.`pId`";
+                            $sql_returnItem="SELECT * FROM `returndetail` INNER JOIN `product` WHERE `returnId`=? AND `returndetail`.`pId`=`product`.`pId`";
                             $arr_returnItem=[
-                                $arr[$i]['returnlistId']
+                                $arr[$i]['returnId']
                             ];
                             $stmt1=$pdo->prepare($sql_returnItem);
                             $stmt1->execute($arr_returnItem);
@@ -299,7 +296,7 @@ if(isset($_POST['csId'])){
                             <tr class="returnId">
                                 <td><input type="checkbox" class="check_it"></td>
                                 <td class="orderId" style="display:none"><?php echo $arr[$i]['orderId'] ?></td>
-                                <td class="returnlistId"><?php echo $arr[$i]['returnlistId']?></td>
+                                <td class="returnlistId"><?php echo $arr[$i]['returnId']?></td>
                                 <td><?php echo $arr[$i]['created_at']?></td>
                                 <td><?php echo $arr[$i]['returnReason']?></td>
                                 <td><button class="btn btn-success btn-itemInfo">詳細資料</button></td>
@@ -311,13 +308,14 @@ if(isset($_POST['csId'])){
 
                             //TODO span JQ要更改 不然無法使用span
                             for($k=0;$k<count($arr1);$k++){
+                                $sCount=$arr1[$k]['price']*$arr1[$k]['count']
                                 ?>
                                 <tr class='itemInfo'>
                                     <td><input type="checkbox" class="check_it"></td>    
                                     <td><?php echo $arr1[$k]['pId']?></td>
                                     <td><?php echo $arr1[$k]['price']?></td>
-                                    <td class="Count"><?php echo $arr1[$k]['Count']?>件</td>
-                                    <td>小計：<span class="sCount"></span></td>
+                                    <td class="Count"><?php echo $arr1[$k]['count']?>件</td>
+                                    <td>小計：<span class="sCount"><?php echo $sCount?></span></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
