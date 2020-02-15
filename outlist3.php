@@ -66,9 +66,19 @@ if(isset($_POST['csId'])){
                 location.reload(json);
             })
         })
-    //多筆orderId傳送
-    $(document).on('click','button#order_detail',function(){
-
+    $("#order_id").on("keyup",function(){
+        $(".orderId").each(function(i,v){
+            let Num=Number($(this).text())
+            //TODO輸入3能進入if 但是卻沒有hide 
+            if(Num==$("#order_id").val()){
+                $(".orderId").closest("tr").hide()
+                $(this).closest("tr").show()
+                return false;
+            }
+            if(false ||$("#order_id").val()!=Num){
+                $(".orderId").closest("tr").show()
+            }
+        })
     })
        
     });
@@ -215,12 +225,14 @@ if(isset($_POST['csId'])){
                     <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-content">
-                          
-                            
+                                <div class="col-form-label w-100 text-center d-flex">
+                                    <span  class="d-flex align-items-center justify-content-center p-2" style="background:#f3f3f4" >訂單編號</span>
+                                    <input type="text" placeholder="搜尋訂單ID" id="order_id" class="text-left w-75 p-2">
+                                </div>
                                     
                             <?php
                             // 獲取所有已出貨的訂單
-    $sql="SELECT * FROM `orderlist` WHERE `outStatus`='已出貨'
+    $sql="SELECT * FROM `orderlist` WHERE `outStatus`!='訂單成立'
     ORDER BY `orderlist`.`updated_time` ASC ";
 
     
