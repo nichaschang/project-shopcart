@@ -25,11 +25,6 @@ if(isset($_POST['csId'])){
     </script>
     <script>
         $(document).ready(function(){
-            function tt(){
-                let price=$(".itemInfo").find(".price");
-                console.log(price)
-            }
-            tt()
     //全選功能
         $("#allcheck").change(function() {
             if (this.checked) {
@@ -58,12 +53,13 @@ if(isset($_POST['csId'])){
         }
     });
     
-    // $('.itemInfo').hide();
-    
+    //隱藏的內容
     $(".itemInfo").hide();
     $(".itemtitle").hide();
     $(".returnPayHead").hide();
-    let total=0;
+    let total=0;//加總用
+
+    //點擊後顯示退貨單詳細內容
         $(".btn-itemInfo").on("click",function(){
         $(".itemInfo").hide();
         $(".itemtitle").hide();        
@@ -72,11 +68,9 @@ if(isset($_POST['csId'])){
         $(this).closest("tbody").find("tr").show();
         $(this).closest("tbody").find(".returnId").css("border-left","6px solid #f35");
         $(this).closest("tbody").find(".itemInfo").css("border-left","6px solid #f55");
-        let x=$(this).closest("tr").nextAll().find(".sCount");
-        let z=$(this).closest("tr").nextAll().find(".returnPay");
+        let x=$(this).closest("tr").nextAll().find(".sCount"); //產品小計
+        let z=$(this).closest("tr").nextAll().find(".returnPay"); //退貨單總額
         total=0;
-        console.log('x',x)
-        console.log('z',z)
             x.each(function(i,v){
                 z.html(0)
                 let y=$(this).html()*1;
@@ -84,20 +78,41 @@ if(isset($_POST['csId'])){
             })
             z.html(total);
         })
+
+        //允許退貨
         $(".btn-returnAllow").on("click",function(){
-            // let z=$(this).closest("tr").remove()
             let orderId=$(this).closest("tr").find(".orderId").html()
-            let returnlistId=$(this).closest("tr").find(".returnlistId").html()
-            console.log(returnlistId)
+            let returnId=$(this).closest("tr").find(".returnlistId").html()
+            let pId=$(this).closest("tr").siblings().find(".pId")
+            let pIdarr=[];
+            pId.each(function(i,v){
+                pIdarr.push(pId.eq(i).html())
+            })
             $.ajax({
                 method:"POST",
                 url:"returnRequire.php",
                 data:{
                     "orderId":orderId,
-                    "returnlistId":returnlistId
+                    "pId":pIdarr,
+                    "returnId":returnId
                 }
             }).done(function(json){
                 alert(json)
+                // window.location.reload();
+            })
+        })
+
+        //拒絕退貨
+        $(".btn-returnReject").on("click",function(){
+            let DelreturnId=$(this).closest("tr").find(".returnlistId").html()
+            $.ajax({
+                method:"POST",
+                url:"returnRequire.php",
+                data:{
+                    "DelreturnId":DelreturnId
+                }
+            }).done(function(){
+                window.location.reload();
             })
         })
     });
@@ -260,13 +275,10 @@ if(isset($_POST['csId'])){
                     <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-content">
-                            <label for="allcheck">
-            <input type="checkbox" id="allcheck">全選/取消全選
-            </label>
                     <table>
                         <thead>
                             <tr class="returnlist">
-                                <th>選擇</th>
+                                <th>訂單編號</th>
                                 <th>退貨單號</th>
                                 <th>退貨日期</th>
                                 <th>退貨原因</th>
@@ -276,15 +288,19 @@ if(isset($_POST['csId'])){
                         </thead>
                         <?php
                         // 呼叫退貨申請單
-                        $sql_returnlist="SELECT * FROM `returnlist` INNER JOIN `returndetail` WHERE`returndetail`.`returnId`=`returnlist`.`returnId` GROUP BY `returndetail`.`returnId`";
+                        $sql_returnlist="SELECT * FROM `returnlist` WHERE `returnStatus`='退貨處理中' ";
                         
                         $stmt=$pdo->prepare($sql_returnlist);
                         $stmt->execute();
                         $arr=$stmt->fetchAll(PDO::FETCH_ASSOC);?>
                         
                             <?php
-                        for($i=0;$i<count($arr);$i++){
+
+                            // 大項目內容呼叫
+
                             $sql_returnItem="SELECT * FROM `returndetail` INNER JOIN `product` WHERE `returnId`=? AND `returndetail`.`pId`=`product`.`pId`";
+                            for($i=0;$i<count($arr);$i++){
+                            
                             $arr_returnItem=[
                                 $arr[$i]['returnId']
                             ];
@@ -294,8 +310,7 @@ if(isset($_POST['csId'])){
                             ?>
                             <tbody class='tBar'>
                             <tr class="returnId">
-                                <td><input type="checkbox" class="check_it"></td>
-                                <td class="orderId" style="display:none"><?php echo $arr[$i]['orderId'] ?></td>
+                                <td class="orderId"><?php echo $arr[$i]['orderId'] ?></td>
                                 <td class="returnlistId"><?php echo $arr[$i]['returnId']?></td>
                                 <td><?php echo $arr[$i]['created_at']?></td>
                                 <td><?php echo $arr[$i]['returnReason']?></td>
@@ -304,18 +319,18 @@ if(isset($_POST['csId'])){
                                 <td><button class="btn btn-danger btn-returnReject">拒絕</button></td>
                             </tr>
                             <?php
-                            // 退貨單內容及總計
 
-                            //TODO span JQ要更改 不然無法使用span
+                            // 退貨單詳細內容及總計的呼叫
+
                             for($k=0;$k<count($arr1);$k++){
                                 $sCount=$arr1[$k]['price']*$arr1[$k]['count']
                                 ?>
                                 <tr class='itemInfo'>
-                                    <td><input type="checkbox" class="check_it"></td>    
-                                    <td><?php echo $arr1[$k]['pId']?></td>
-                                    <td><?php echo $arr1[$k]['price']?></td>
+                                    <td class="pId"><?php echo $arr1[$k]['pId']?></td>
+                                    <td>$<?php echo $arr1[$k]['price']?></td>
                                     <td class="Count"><?php echo $arr1[$k]['count']?>件</td>
                                     <td>小計：<span class="sCount"><?php echo $sCount?></span></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
