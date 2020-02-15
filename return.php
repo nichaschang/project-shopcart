@@ -51,64 +51,56 @@ if(isset($_POST['csId'])){
             // console.log(b);
                 if(this.checked){
                total+=b
-            //    console.log(total);
                $('#returnMoney').html(total)
             }else{
                 total-=b
-                // console.log(total);
                 $('#returnMoney').html(total)
             }
         })
         
         $('.outStatus').each(function(i,v){
             console.log($(this).text())
-            if($(this).text()=='退貨申請'){
-                $(this).closest("tr").find(".check_return").attr("disabled",true)
-            }        
+            if($(this).text()=='退貨處理中'){
+                // $(this).closest("tr").find(".check_return").attr("disabled",true)
+                $(this).closest("tr").find(".check_return").hide()
+            }else if($(this).text()=='退貨完成'){
+                $(this).closest("tr").find(".check_return").hide()
+            }
         })
         
         $(document).on('click','.enterReturn',function(){
-            let csPhone=$('.csPhone').html();
-            let csAdress=$('.csAdress').html();
+            let buyerName=$('.buyerName').html();
+            let buyerPhone=$('.buyerPhone').html();
+            let buyerAdress=$('.buyerAdress').html();
             let returnMsg=$('.returnMsg').val();
-            let reMoney=$('#returnMoney').html();
+            let returnPay=$('#returnMoney').html();
             let orderId=$('.orderId').html();
             let pIdarr=[];
             let countarr=[];
-            // let pId=$('.itemInfo').eq(1).find('input').val();
-            // let count=$('.itemInfo').eq(1).find('.count').html();
-            // console.log(pId);
-            // console.log(count);
             $('.check_return').each(function(i,v){
                 if($(this).is(":checked")){
                 let pId=$('.itemInfo').eq(i).find('input').val();
                 let count=$('.itemInfo').eq(i).find('.count').html();
                     pIdarr.push(pId)
                     countarr.push(count)
-                    // console.log(countarr);
                 }
             })
-                // console.log(pIdarr);
-                // console.log(countarr);
             $.ajax({
                 method:"POST",
                 url:"return1.php",
                 data:{
                     "orderId":orderId,
-                    "reMoney":reMoney,
-                    "csPhone":csPhone,
-                    "csAdress":csAdress,
+                    "returnPay":returnPay,
+                    "buyerName":buyerName,
+                    "buyerPhone":buyerPhone,
+                    "buyerAdress":buyerAdress,
                     "returnMsg":returnMsg,
                     "pIdarr":pIdarr,
                     "countarr":countarr
                 }
-            }).done(function(json){
-                // alert(json);
-                window.location.href='./orderlist.php';
+            }).done(function(){
+                history.back();
             })
-                // console.log(pIdarr);
-                // console.log(countarr);
-            
         })
 
     })
@@ -243,7 +235,6 @@ if(isset($_POST['csId'])){
                             <li class="active"><a href="outlist.php">待出貨單</a></li>
                             <li><a href="outlist3.php">已完成出貨單</a></li>
                             <li><a href="returnlist.php">申請退貨單</a></li>
-                            <li><a href="paymentType.php">付款方式編輯</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -324,15 +315,15 @@ if(isset($_POST['csId'])){
                                 
                                 <tr>
                                 <td>姓名</td>
-                                <td class="csName"><?php echo $arr[0]['csName']?></td>
+                                <td class="buyerName"><?php echo $arr[0]['csName']?></td>
                                 </tr>
                                 <tr>
                                     <td>電話</td>
-                                    <td class="csPhone"><?php echo $arr[0]['csPhone']?></td>
+                                    <td class="buyerPhone"><?php echo $arr[0]['csPhone']?></td>
                                 </tr>
                                 <tr>
                                     <td>收件地址</td>
-                                    <td class="csAdress"><?php echo $arr[0]['csAdress']?></td>
+                                    <td class="buyerAdress"><?php echo $arr[0]['csAdress']?></td>
                                 </tr>
                                 </thead>
                                 </table>
@@ -358,23 +349,16 @@ if(isset($_POST['csId'])){
                                         <th>商品小計</th>
                                         <th></th>
                                     </tr>
+
 <?php 
+// 該訂單產品
     $sql_itemInfo="SELECT `orderdetail`.`outStatus`,`orderdetail`.`orderId`,`orderdetail`.`pId`,`orderdetail`.`count`,`product`.`pId`,`product`.`pName`,`product`.`price` FROM `orderdetail` INNER JOIN `product` INNER JOIN `orderlist` WHERE `orderdetail`.`orderId`=? AND `orderdetail`.`pId`=`product`.`pId` AND `orderdetail`.`orderId`=`orderlist`.`orderId`";
     $arr_itemInfo=[
         $_GET['orderId']
     ];
     $stmt=$pdo->prepare($sql_itemInfo);
     $stmt->execute($arr_itemInfo);
-    // echo '<pre>';
-    // print_r($arr_itemInfo);
-    // echo '</pre>';
-    // exit();
-
     $arr=$stmt->fetchAll(PDO::FETCH_ASSOC);
-    // echo "<pre>";
-    // print_r($arr);
-    // echo "</pre>";
-    // exit();
     for($i=0;$i<count($arr);$i++){
         $sCount=$arr[$i]['count']*$arr[$i]['price']
     ?>
@@ -394,9 +378,7 @@ if(isset($_POST['csId'])){
                                 <?php
     }
     ?>
-
-
-                               
+           
                                 </table>
                                 <span style="display:none" class="orderId"><?php echo $_GET['orderId']?></span>
                                 <div class="mletter mWidth t-right">退款金額 $<span id="returnMoney">0</span></div>
