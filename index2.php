@@ -324,7 +324,7 @@ error_reporting(0); //忽略錯誤
                                     </tr>
                                     </thead> 
                             <?php
-    $sql_customerCart="SELECT `csId`,`product`.`pId`,`product`.`pName`,`product`.`price`,`shopcart`.`count`,`shopcart`.`orderCheck`,`shopcart`.`pId` FROM `shopcart` INNER JOIN `product` WHERE `product`.`pId`=`shopcart`.`pId` AND `csId`=? ";
+    $sql_customerCart="SELECT `csId`,`product`.`pId`,`product`.`pName`,`product`.`price`,`shopcart`.`count`,`shopcart`.`pId` FROM `shopcart` INNER JOIN `product` WHERE `product`.`pId`=`shopcart`.`pId` AND `csId`=? ";
     
     $csId = $_SESSION['csId'];
     $arrParam = [
