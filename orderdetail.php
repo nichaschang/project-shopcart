@@ -71,9 +71,6 @@ $_SESSION['orderId']=$_GET['orderId'];
                    float:right;
                    margin-right:30px;
                }
-               #check_out a{
-                color:#000;
-               }
                .color {
                    background: #eee;
                 }
@@ -121,8 +118,6 @@ $_SESSION['orderId']=$_GET['orderId'];
                         <ul class="nav nav-second-level">
                             <li class="active"><a href="outlist.php">等待出貨單</a></li>
                             <li><a href="outlist3.php">已完成出貨單</a></li>
-                            <li><a href="paymentType.php">付款方式編輯</a></li>
-                            
                         </ul>
                     </li>
                 </ul>
@@ -184,7 +179,7 @@ $_SESSION['orderId']=$_GET['orderId'];
                         <div class="ibox ">
                             <div class="ibox-content">
                             <?php
-    $sql="SELECT `orderdetail`.`orderId`,`orderlist`.`orderId`,`orderlist`.`orderId`,`orderdetail`.`orderId`,`orderdetail`.`pId`,`product`.`pId`,`orderlist`.`created_at`,`product`.`price`,`orderdetail`.`count`,`orderStatus`,`total`,`product`.`pName`,`orderdetail`.`outStatus`
+    $sql="SELECT `orderdetail`.`orderId`,`orderlist`.`orderId`,`orderlist`.`orderId`,`orderdetail`.`pId`,`product`.`pId`,`orderlist`.`created_at`,`product`.`price`,`orderdetail`.`count`,`total`,`product`.`pName`,`orderdetail`.`outStatus`
     FROM `orderlist` INNER JOIN `orderdetail` JOIN `product` 
     WHERE `orderdetail`.`orderId`=?
     AND `orderlist`.`orderId`=`orderdetail`.`orderId` AND `orderdetail`.`pId` = `product`.`pId` ";
