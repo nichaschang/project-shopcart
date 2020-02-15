@@ -2,7 +2,7 @@
 require_once('./db.inc.php');
 
 // exit();
-$sql = "SELECT `pId`,`csId`,`count` FROM `shopcart` WHERE `pId`=?  AND `csId`=? AND `orderCheck`=0";
+$sql = "SELECT `pId`,`csId`,`count` FROM `shopcart` WHERE `pId`=?  AND `csId`=?";
 $arrParam = [
     $_POST['pId'],
     $_POST['csId'] 
@@ -18,8 +18,6 @@ if($stmt->rowCount()>0){
    
     $arr = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
     
-    
-// exit();
 
     if($arr['csId'] == $_POST['csId']){
         
