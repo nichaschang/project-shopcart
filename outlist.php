@@ -51,8 +51,44 @@ if(isset($_POST['csId'])){
            $("#allcheck").prop("checked", false);
         }
     });
+    $("#order_id").on("keyup",function(){
+        $(".orderId").each(function(i,v){
+            let Num=Number($(this).text())
+            //TODO輸入3能進入if 但是卻沒有hide 
+            if(Num==$("#order_id").val()){
+                $(".orderId").closest("tr").hide()
+                $(this).closest("tr").show()
+                console.log($(this).textContent);
+                return false;
+            }
+            if(false ||$("#order_id").val()!=Num){
+                $(".orderId").closest("tr").show()
+            }
+        })
+    })
+    //多筆出貨
+    $("#more-checkout").on("click",function(){
+        $(".check_it").each(function(){
+            if($(this).is(":checked")){
+                let orderId=$(this).closest("tr").find(".orderId").text()
+                $.ajax({
+                method:"POST",
+                url:"outlist2.php",
+                data:{
+                    "orderId":orderId
+                }
+            }).done(function(json){
+                alert(json)
+                // location.reload(json);
+            })
+            }else{
+                console.log(456)
+            }
+        })
+        
+    })
     //傳送資料功能
-        $(document).on('click','button#check_out',function(){
+        $('.check_out').on('click',function(){
             console.log($(this.closest('tr').childNodes[3]).html());
             let orderId=$(this.closest('tr').childNodes[3]).html();
             $.ajax({
@@ -62,29 +98,11 @@ if(isset($_POST['csId'])){
                     "orderId":orderId
                 }
             }).done(function(json){
-                // alert(json)
-                location.reload(json);
+                alert(json)
+                // location.reload(json);
             })
         })
-        // console.log($(".allCheck_out"));
-        $(document).on('click','button.allCheck_out',function(){
-            
-            console.log($(".allCheck_out"));
-            $(".check_it").each(function() {
-                let orderId=$(this.closest('tr').childNodes[3]).html();
-                if (this.checked){
-                    $.ajax({
-                        method:"POST",
-                        url:"outlist2.php",
-                        data:{
-                            "orderId":orderId
-                        }
-                    }).done(function(json){
-                        location.reload(json)
-                    })
-                }
-            })
-        })
+       
         
     });
     </script>
@@ -240,32 +258,22 @@ if(isset($_POST['csId'])){
                     <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-content">
-                            <!-- ibox-content -->
-                            <div class="wrapper wrapper-content animated fadeInRight ecommerce">
-                                <div class="ibox-content m-b-sm border-bottom">
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label class="col-form-label" for="order_id">訂單ID</label>
-                                                <input type="text" id="order_id" name="order_id" value="" placeholder="Order ID" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label class="col-form-label" for="customer">購買人名稱</label>
-                                                <input type="text" id="customer" name="customer" value="" placeholder="Customer" class="form-control">
-                                            </div>
-                                        </div>
+                                <div class=" d-flex justify-content-between align-items-center">
+                                    <div class="col-form-label w-100 text-center d-flex">
+                                        <span  class="d-flex  p-2" style="background:#f3f3f4" >訂單編號</span>
+                                        <input type="text" placeholder="搜尋訂單ID" id="order_id" class="text-left w-25 p-2">
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-danger mx-4" id="more-checkout">多筆出貨</button>
                                     </div>
                                 </div>
-                            </div>
                             <div class="row">
     <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-content">
             <?php
     // 呼叫所有待出貨資料
-    $sql="SELECT * FROM `orderlist` WHERE `outStatus`='待出貨' ORDER BY `orderlist`.`created_at` ASC ";
+    $sql="SELECT * FROM `orderlist` WHERE `outStatus`='訂單成立' ORDER BY `orderlist`.`created_at` ASC ";
 
     //TODO 獲取使用者id
     $stmt = $pdo->prepare($sql);
@@ -310,7 +318,7 @@ if(isset($_POST['csId'])){
                                 <a href="./outdetail.php?orderId=<?php echo $arr[$i]['orderId'];?>" class="btn btn-success order_detail">訂單內容</a>
                             </td>
                             <td>
-                                <button class="btn btn-danger" id="check_out">確認出貨</button>
+                                <button class="btn btn-danger check_out">確認出貨</button>
                             </td>
                         </tr>
                     </tbody>
