@@ -28,98 +28,38 @@ if(isset($_POST['csId'])){
         
         $(".outStatusTxt").each(function(i,v){
             // console.log(v.html())
-            if($(this).html()=="已出貨"){
-                $(this).css('color','#000')
-            }else if($(this).html()=="退貨申請"){
-                $(this).css('color','#fff');
-                $(this).css('background','#f00');
-            }else if($(this).html()=="退貨成功"){
+            let Status=$(this).html();
+            switch(Status){
+                case "退貨完成":
                 $(this).css('color','#f90');
-            }else{
-                // $(this).css('color','#fff');
-                $(this).css('background','#faa');
+                break;
+                case "訂單成立":
+                let btn=$(this).closest("tr").find(".returnBtn")
+                btn.attr("href","javascript:void(0)");
+                style={
+                    background:"#ccc",
+                    color:"#000",
+                    border:"none"
+                }
+                btn.css(style)
+                break;
+                default:
+                break;
             }
+            // if($(this).html()=="已出貨"){
+            //     $(this).css('color','#000')
+            // }else if($(this).html()=="退貨處理中"){
+            //     $(this).css('color','#fff');
+            //     $(this).css('background','#f00');
+            // }else if($(this).html()=="退貨完成"){
+            //     $(this).css('color','#f90');
+            // }else{
+            //     // $(this).css('color','#fff');
+            //     $(this).css('background','#faa');
+            // }
             
         })
-        $('.returnBtn').each(function(){
-            let outStatus=$(this).closest("tr").find(".outStatusTxt")
-            if(outStatus.text()=='待出貨'){
-                let style={
-                    'background':'#ddd',
-                    'border':'#ddd',
-                    'color':'#000'
-                }
-                $(this).css(style);
-                $(this).attr('href','javascript:void(0)')
-            }
-            console.log(outStatus.text())
-        })
-
-        let allTotal=document.querySelector("#theTotal");
-        function tt(total) {
-            total=0;
-            $('.sCount').each(function(){
-                let a=$(this).html()*1;
-                total +=a;
-                $("#theTotal").innerHTML=total;        
-            })// 計算總額
-        }tt()
-        $('.Qty').on('keyup',function() {
-            let a=$(this).val(); //數量
-            let b=$(this.closest('tr').childNodes[7]).html();
-            // console.log(a);
-            console.log($(this.closest('tr').childNodes));
-            $(this.closest('tr').childNodes[13]).html(a*b);
-            $('.sCount').each(function(){
-                tt();
-            })
-        })
-        $(document).on('click','button#check_out',function(){
-            let countArr=[];
-            let pIdArr=[];
-            $('.Qty').each(function(i,v){
-                let count=$(this).val()*1;             
-                countArr.push(count); 
-                let p=$(this.closest('tr').childNodes[1]).html();
-                pIdArr.push(p);
-                });
-                // console.log(countArr)
-                // console.log(pIdArr)
-                $.ajax({
-                    method:"POST",
-                    url:"out.php",
-                    data:{
-                        "count":countArr,
-                        "pId":pIdArr,
-                        "total":$('#theTotal').html()
-                    }
-                })
-        })
-        $(document).on('click','button.order_detail',function(){
-                let detail=$(this.closest('tr').childNodes[1]).html();
-                // console.log(detail);
-
-                $.ajax({
-                    method:"POST",
-                    url:"orderdetail.php",
-                    data:{
-                        "orderId":detail
-                    }
-                })
-        });
-        //     let index=0
-        // $(".catchPage").on("click",function(){
-        //     let a=$("table").children().length-1
-        //     let c=$("tr:gt(index)")
-        //     let b=$("tr:lt(3):eq(0)")
-        //     if(a>3){
-        //         c.hide()
-        //         index+=3
-        //         c=$("tr:gt(index)")
-        //     }
-        //     console.log(c)
-        //     console.log(index)
-        // })
+       
     });
     </script>
     <style>
@@ -153,9 +93,6 @@ if(isset($_POST['csId'])){
                .f-right{
                    float:right;
                    margin-right:30px;
-               }
-               #check_out a{
-                color:#000;
                }
                .color {
                    background: #eee;
@@ -261,14 +198,11 @@ if(isset($_POST['csId'])){
                     <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-content">
-                          <button class="btn btn-danger catchPage">抓取用按鈕</button>
                             
                                     
                             <?php
-    $sql="SELECT `orderlist`.`paymentType`,`orderlist`.`orderId`,`orderlist`.`csId`,`orderlist`.`total`,`orderlist`.`orderStatus`,`orderlist`.`outStatus`,`orderlist`.`created_at`
-    FROM `orderlist` INNER JOIN `payment` 
-    WHERE `orderlist`.`csId`=?
-    AND  `payment`.`paymentName`=`orderlist`.`paymentType` ";
+    $sql="SELECT `orderlist`.`paymentType`,`orderlist`.`orderId`,`orderlist`.`csId`,`orderlist`.`total`,`orderlist`.`outStatus`,`orderlist`.`created_at`
+    FROM `orderlist` WHERE `orderlist`.`csId`=?";
 
     $csId = $_SESSION['csId'];
     $arrParam = [
@@ -301,8 +235,7 @@ if(isset($_POST['csId'])){
                     <tbody>
                         <tr>
                             <td name='orderId'' class='orderId'><?php echo $arr[$i]['orderId'];?></td>                            
-                            <td  name='created_at' class='created_at'><?php echo $arr[$i]['created_at']; ?></td>
-                            <td name='orderStatus' class='orderStatus'><?php echo $arr[$i]['orderStatus']; ?></td>
+                            <td name='created_at' class='created_at'><?php echo $arr[$i]['created_at']; ?></td>
                             <td name='outStatus' class='outStatus'><span class="outStatusTxt"><?php echo $arr[$i]['outStatus']; ?></span></td>
                             <td name='total' class='total'><?php echo $arr[$i]['total']; ?></td>
                             <td name='paymentType' class='paymentType'><?php echo $arr[$i]['paymentType']?></td>
