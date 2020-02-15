@@ -37,7 +37,7 @@ for($i=0;$i<count($_POST['DpId']);$i++){
 }         
 
 //產生訂單
-$sql_order="INSERT INTO `orderlist`(`csId`,`total`,`paymentType`,`shippingWay`,`outStatus`) VALUES (?,?,?,?,'待出貨')";
+$sql_order="INSERT INTO `orderlist`(`csId`,`total`,`paymentType`,`shippingWay`,`outStatus`) VALUES (?,?,?,?,'訂單成立')";
 
 $arr_order=[
     $csId,
@@ -50,19 +50,17 @@ $stmt->execute($arr_order);
 $orderId = $pdo->lastInsertId();
 
 //將 `shopcart`與`orderlist`的資料傳給`orderdetail`
-$sql_insertCount="INSERT INTO `orderdetail`(`orderId`,`pId`,`count`) 
-SELECT `orderlist`. `orderId`,`shopcart`.`pId`,`shopcart`.`count` 
-FROM `orderlist` INNER JOIN `shopcart` 
-WHERE `shopcart`.`csId`=`orderlist`.`csId` AND `orderlist`.`orderId`=?";
-
-$arr1_insertCount=[
-    $orderId
-];
-
+$sql_insertCount="INSERT INTO `orderdetail` (`orderId`,`pId`,`count`) VALUES (?,?,?)";
 $stmt=$pdo->prepare($sql_insertCount);
-$stmt->execute($arr1_insertCount);
+for($i=0;$i<count($_POST['pId']);$i++){
+    $arr1_insertCount=[
+        $orderId,
+        $_POST['pId'][$i],
+        $_POST['count'][$i]
+    ];
+    $stmt->execute($arr1_insertCount);
+}
 
-header("Refresh:0;url=./index2.php");
 
 //結帳後清除購物車內容
 $sql_cleanShopcart="DELETE FROM `shopcart` WHERE `csId`=?";
@@ -71,5 +69,6 @@ $arr_cleanShopcart=[
 ];
 $stmt=$pdo->prepare($sql_cleanShopcart);
 $stmt->execute($arr_cleanShopcart);
+header("Refresh:0;url=./index2.php");
 
 ?>
