@@ -48,7 +48,6 @@ if(isset($_POST['csId'])){
         let total=0;
         $(document).on('click','.check_return',function(){
             let b=$(this.closest('tr').childNodes[7]).html()*1;
-            // console.log(b);
                 if(this.checked){
                total+=b
                $('#returnMoney').html(total)
@@ -59,9 +58,8 @@ if(isset($_POST['csId'])){
         })
         
         $('.outStatus').each(function(i,v){
-            console.log($(this).text())
+            
             if($(this).text()=='退貨處理中'){
-                // $(this).closest("tr").find(".check_return").attr("disabled",true)
                 $(this).closest("tr").find(".check_return").hide()
             }else if($(this).text()=='退貨完成'){
                 $(this).closest("tr").find(".check_return").hide()
@@ -77,30 +75,39 @@ if(isset($_POST['csId'])){
             let orderId=$('.orderId').html();
             let pIdarr=[];
             let countarr=[];
+            let Num=0;
             $('.check_return').each(function(i,v){
                 if($(this).is(":checked")){
+                    Num=0
                 let pId=$('.itemInfo').eq(i).find('input').val();
                 let count=$('.itemInfo').eq(i).find('.count').html();
                     pIdarr.push(pId)
                     countarr.push(count)
+                    $.ajax({
+                        method:"POST",
+                        url:"return1.php",
+                        data:{
+                            "orderId":orderId,
+                            "returnPay":returnPay,
+                            "buyerName":buyerName,
+                            "buyerPhone":buyerPhone,
+                            "buyerAdress":buyerAdress,
+                            "returnMsg":returnMsg,
+                            "pIdarr":pIdarr,
+                            "countarr":countarr
+                        }
+                    }).done(function(){
+                        history.back();
+                    })
+                }else{
+                    Num=1
                 }
             })
-            $.ajax({
-                method:"POST",
-                url:"return1.php",
-                data:{
-                    "orderId":orderId,
-                    "returnPay":returnPay,
-                    "buyerName":buyerName,
-                    "buyerPhone":buyerPhone,
-                    "buyerAdress":buyerAdress,
-                    "returnMsg":returnMsg,
-                    "pIdarr":pIdarr,
-                    "countarr":countarr
-                }
-            }).done(function(){
-                history.back();
-            })
+            if(Num==1){
+                alert("沒有選擇任何商品")
+            }else{
+                console.log(Num)
+            }
         })
 
     })
