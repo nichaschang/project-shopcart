@@ -97,8 +97,8 @@ if(isset($_POST['csId'])){
                     "returnId":returnId
                 }
             }).done(function(json){
-                alert(json)
-                // window.location.reload();
+                // alert(json)
+                window.location.reload();
             })
         })
 
@@ -283,19 +283,17 @@ if(isset($_POST['csId'])){
                                 <th>退貨日期</th>
                                 <th>退貨原因</th>
                                 <th>詳細資料</th>
-                                <th colspan="2">退貨確認</th>
+                                <th>退貨確認</th>
                             </tr>
                         </thead>
                         <?php
                         // 呼叫退貨申請單
-                        $sql_returnlist="SELECT * FROM `returnlist` WHERE `returnStatus`='退貨處理中' ";
+                        $sql_returnlist="SELECT * FROM `returnlist` WHERE `returnStatus`='退貨處理中'";
                         
                         $stmt=$pdo->prepare($sql_returnlist);
                         $stmt->execute();
-                        $arr=$stmt->fetchAll(PDO::FETCH_ASSOC);?>
+                        $arr=$stmt->fetchAll(PDO::FETCH_ASSOC);
                         
-                            <?php
-
                             // 大項目內容呼叫
 
                             $sql_returnItem="SELECT * FROM `returndetail` INNER JOIN `product` WHERE `returnId`=? AND `returndetail`.`pId`=`product`.`pId`";
@@ -314,18 +312,31 @@ if(isset($_POST['csId'])){
                                 <td class="returnlistId"><?php echo $arr[$i]['returnId']?></td>
                                 <td><?php echo $arr[$i]['created_at']?></td>
                                 <td><?php echo $arr[$i]['returnReason']?></td>
-                                <td><button class="btn btn-success btn-itemInfo">詳細資料</button></td>
-                                <td class="border-left"><button class="btn btn-primary btn-returnAllow">同意</button></td>
-                                <td><button class="btn btn-danger btn-returnReject">拒絕</button></td>
+                                <td>
+                                <button class="btn btn-success btn-itemInfo m-1">商品/客戶資料</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-returnAllow mx-3">同意</button>
+                                    <button class="btn btn-danger btn-returnReject mx-3">拒絕</button>
+                                </td>
+                            </tr>
+                            
+                            <tr class="buyerInfo itemInfo">
+                                <td>姓名：<span class="mx-2 font-weight-bold"><?php echo $arr[$i]['buyerName']?></span></td>
+                                <td>電話：<span class="mx-2 font-weight-bold"><?php echo $arr[$i]['buyerPhone']?></span></td>
+                                <td>地址：<span class="mx-2 font-weight-bold"><?php echo $arr[$i]['buyerAdress']?></span></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <?php
 
-                            // 退貨單詳細內容及總計的呼叫
 
+                            // 退貨單詳細內容及總計的呼叫
                             for($k=0;$k<count($arr1);$k++){
                                 $sCount=$arr1[$k]['price']*$arr1[$k]['count']
                                 ?>
-                                <tr class='itemInfo'>
+                                <tr class="itemInfo">
                                     <td class="pId"><?php echo $arr1[$k]['pId']?></td>
                                     <td>$<?php echo $arr1[$k]['price']?></td>
                                     <td class="Count"><?php echo $arr1[$k]['count']?>件</td>
