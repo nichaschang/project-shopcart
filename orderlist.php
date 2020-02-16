@@ -46,17 +46,6 @@ if(isset($_POST['csId'])){
                 default:
                 break;
             }
-            // if($(this).html()=="已出貨"){
-            //     $(this).css('color','#000')
-            // }else if($(this).html()=="退貨處理中"){
-            //     $(this).css('color','#fff');
-            //     $(this).css('background','#f00');
-            // }else if($(this).html()=="退貨完成"){
-            //     $(this).css('color','#f90');
-            // }else{
-            //     // $(this).css('color','#fff');
-            //     $(this).css('background','#faa');
-            // }
             
         })
        
@@ -85,18 +74,6 @@ if(isset($_POST['csId'])){
                    width:6em;
                    height:6em;
                }
-               .tspan{
-                   font-size:2em;
-                   color:#f00;
-                   padding-left:10px;
-               }
-               .f-right{
-                   float:right;
-                   margin-right:30px;
-               }
-               .color {
-                   background: #eee;
-                }
                 .outStatusTxt {
                     padding:8px;
                     border-radius:3px;
@@ -257,16 +234,6 @@ if(isset($_POST['csId'])){
                 </div>
             </div>
         </div>
-        
-        <!-- Footer -->
-        <!-- <div class="footer">
-            <div class="float-right">
-                10GB of <strong>250GB</strong> Free.
-            </div>
-            <div>
-                <strong>Copyright</strong> Example Company &copy; 2014-2018
-            </div>
-        </div> -->
 
     </div>
     </div>
