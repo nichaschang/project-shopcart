@@ -4,8 +4,8 @@
 --
 -- 主機： 127.0.0.1
 -- 產生時間： 
--- 伺服器版本： 10.4.11-MariaDB
--- PHP 版本： 7.4.1
+-- 伺服器版本： 10.4.10-MariaDB
+-- PHP 版本： 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -77,14 +77,14 @@ INSERT INTO `customer` (`csId`, `csName`, `csAdress`, `csPhone`, `created_at`, `
 --
 
 CREATE TABLE `orderbuyer` (
-  `orderId` varchar(20) NOT NULL,
-  `buyerName` varchar(20) NOT NULL,
-  `buyerPhone` varchar(10) NOT NULL,
-  `buyerAdress` varchar(99) NOT NULL,
-  `invoiceType` varchar(10) NOT NULL,
-  `taxNo` int(10) NOT NULL,
+  `orderId` varchar(20) NOT NULL COMMENT '訂單編號',
+  `buyerName` varchar(20) NOT NULL COMMENT '購買人姓名',
+  `buyerPhone` varchar(10) NOT NULL COMMENT '購買人電話',
+  `buyerAdress` varchar(99) NOT NULL COMMENT '購買人地址',
+  `invoiceType` varchar(10) NOT NULL COMMENT '發票類別',
+  `taxNo` int(10) NOT NULL COMMENT '統一編號',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -94,12 +94,12 @@ CREATE TABLE `orderbuyer` (
 --
 
 CREATE TABLE `orderdetail` (
-  `orderId` int(20) NOT NULL,
-  `pId` varchar(20) NOT NULL,
-  `count` int(20) NOT NULL,
-  `outStatus` varchar(20) NOT NULL,
+  `orderId` int(20) NOT NULL COMMENT '訂單編號',
+  `pId` varchar(20) NOT NULL COMMENT '產品ID',
+  `count` int(20) NOT NULL COMMENT '購買數量',
+  `outStatus` varchar(20) NOT NULL COMMENT '產品狀態',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -169,7 +169,8 @@ INSERT INTO `orderdetail` (`orderId`, `pId`, `count`, `outStatus`, `created_at`,
 (94, 'p004', 1, '', '2020-02-05 17:28:06', '2020-02-05 17:28:06'),
 (94, 'p008', 2, '', '2020-02-05 17:28:06', '2020-02-05 17:28:06'),
 (95, 'p007', 1, '', '2020-02-07 17:30:15', '2020-02-07 17:30:15'),
-(95, 'p004', 1, '', '2020-02-07 17:30:15', '2020-02-07 17:30:15');
+(95, 'p004', 1, '', '2020-02-07 17:30:15', '2020-02-07 17:30:15'),
+(96, 'p005', 1, '', '2020-02-16 00:16:23', '2020-02-16 00:16:23');
 
 -- --------------------------------------------------------
 
@@ -178,13 +179,13 @@ INSERT INTO `orderdetail` (`orderId`, `pId`, `count`, `outStatus`, `created_at`,
 --
 
 CREATE TABLE `orderlist` (
-  `orderId` int(100) NOT NULL,
-  `csId` varchar(20) NOT NULL,
-  `total` varchar(20) NOT NULL,
-  `marketingType` varchar(99) NOT NULL,
-  `paymentType` varchar(20) NOT NULL,
-  `shippingWay` varchar(20) NOT NULL,
-  `outStatus` varchar(20) NOT NULL,
+  `orderId` int(100) NOT NULL COMMENT '訂單編號',
+  `csId` varchar(20) NOT NULL COMMENT '會員ID',
+  `total` varchar(20) NOT NULL COMMENT '訂單總額',
+  `marketingType` varchar(99) NOT NULL COMMENT '行銷類別',
+  `paymentType` varchar(20) NOT NULL COMMENT '付款類別',
+  `shippingWay` varchar(20) NOT NULL COMMENT '運送類別',
+  `outStatus` varchar(20) NOT NULL COMMENT '訂單狀態',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_time` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -221,21 +222,8 @@ INSERT INTO `orderlist` (`orderId`, `csId`, `total`, `marketingType`, `paymentTy
 (92, 'CS001', '10', '', 'Cashondelivery', '訂單成立', '待出貨', '2020-02-04 15:39:21', '2020-02-04 15:39:21'),
 (93, 'CS001', '20', '', 'CreditCard', '訂單成立', '待出貨', '2020-02-04 15:39:50', '2020-02-04 15:39:50'),
 (94, 'CS004', '540', '', 'ATM', '訂單成立', '待出貨', '2020-02-05 17:28:05', '2020-02-05 17:28:05'),
-(95, 'CS004', '110', '', 'ATM', '訂單成立', '待出貨', '2020-02-07 17:30:15', '2020-02-07 17:30:15');
-
--- --------------------------------------------------------
-
---
--- 資料表結構 `outlist`
---
-
-CREATE TABLE `outlist` (
-  `outId` int(11) NOT NULL,
-  `csId` varchar(20) NOT NULL,
-  `orderId` int(20) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `undated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+(95, 'CS004', '110', '', 'ATM', '訂單成立', '待出貨', '2020-02-07 17:30:15', '2020-02-07 17:30:15'),
+(96, 'CS002', '50', '', 'linePay', '宅配到府', '訂單成立', '2020-02-16 00:16:23', '2020-02-16 00:16:23');
 
 -- --------------------------------------------------------
 
@@ -299,9 +287,9 @@ INSERT INTO `product` (`pId`, `pName`, `price`, `created_at`, `updated_time`) VA
 --
 
 CREATE TABLE `returndetail` (
-  `returnId` int(11) NOT NULL,
-  `pId` varchar(20) NOT NULL,
-  `count` varchar(20) NOT NULL,
+  `returnId` int(11) NOT NULL COMMENT '退貨編號',
+  `pId` varchar(20) NOT NULL COMMENT '產品ID',
+  `count` varchar(20) NOT NULL COMMENT '退貨數量',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -324,13 +312,13 @@ INSERT INTO `returndetail` (`returnId`, `pId`, `count`, `created_at`, `updated_a
 --
 
 CREATE TABLE `returnlist` (
-  `returnId` int(11) NOT NULL,
-  `orderId` varchar(20) NOT NULL,
-  `returnPay` varchar(20) NOT NULL,
-  `buyerName` varchar(20) NOT NULL,
-  `buyerPhone` varchar(10) NOT NULL,
-  `buyerAdress` varchar(30) NOT NULL,
-  `returnReason` varchar(150) NOT NULL,
+  `returnId` int(11) NOT NULL COMMENT '退貨編號',
+  `orderId` varchar(20) NOT NULL COMMENT '訂單編號',
+  `returnPay` varchar(20) NOT NULL COMMENT '退款金額',
+  `buyerName` varchar(20) NOT NULL COMMENT '購買人姓名',
+  `buyerPhone` varchar(10) NOT NULL COMMENT '購買人電話',
+  `buyerAdress` varchar(30) NOT NULL COMMENT '購買人地址',
+  `returnReason` varchar(150) NOT NULL COMMENT '退貨原因',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -352,11 +340,11 @@ INSERT INTO `returnlist` (`returnId`, `orderId`, `returnPay`, `buyerName`, `buye
 --
 
 CREATE TABLE `shopcart` (
-  `csId` varchar(20) NOT NULL,
-  `pId` varchar(20) NOT NULL,
-  `count` int(20) DEFAULT NULL,
+  `csId` varchar(20) NOT NULL COMMENT '會員ID',
+  `pId` varchar(20) NOT NULL COMMENT '產品ID',
+  `count` int(20) DEFAULT NULL COMMENT '產品數量',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_time` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_time` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -379,37 +367,6 @@ INSERT INTO `shopcart` (`csId`, `pId`, `count`, `created_at`, `updated_time`) VA
 ('', '', 1, '2020-02-07 17:10:34', '2020-02-07 17:10:34'),
 ('CS004', 'p005', 1, '2020-02-07 17:31:56', '2020-02-07 17:31:56'),
 ('CS004', 'p007', 1, '2020-02-07 17:31:58', '2020-02-07 17:31:58');
-
--- --------------------------------------------------------
-
---
--- 資料表結構 `students`
---
-
-CREATE TABLE `students` (
-  `id` int(11) NOT NULL COMMENT '流水號',
-  `studentId` varchar(9) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '學號',
-  `studentName` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '學生姓名',
-  `studentGender` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '學生性別',
-  `studentBirthday` date NOT NULL COMMENT '學生生日',
-  `studentPhoneNumber` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '學生手機號碼',
-  `studentDescription` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '個人描述',
-  `studentImg` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '照片檔案名稱',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp() COMMENT '新增時間',
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='學生資料表';
-
---
--- 傾印資料表的資料 `students`
---
-
-INSERT INTO `students` (`id`, `studentId`, `studentName`, `studentGender`, `studentBirthday`, `studentPhoneNumber`, `studentDescription`, `studentImg`, `created_at`, `updated_at`) VALUES
-(2, 'S001', '陳同學', '女', '1995-02-21', '0911111111', '你好，我是陳同學…\r\n請多指教…', NULL, '2019-12-06 00:37:09', '2019-12-10 18:52:53'),
-(3, 'S002', '王同學', '男', '1996-03-22', '0922222222', '你好，我是王同學…\r\n請多指教…', NULL, '2019-12-08 21:33:36', '2019-12-10 18:52:55'),
-(7, 'S003', '江同學', '女', '2000-07-25', '0966666666', '你好，我是江同學…\r\n請多指教…', NULL, '2019-12-08 22:02:24', '2019-12-10 18:52:58'),
-(8, 'S004', '周同學', '男', '2001-08-26', '0977777777', '你好，我是周同學…\r\n請多指教…', NULL, '2019-12-08 22:02:57', '2019-12-10 18:53:01'),
-(9, 'S005', '劉同學', '男', '2002-09-27', '0988888888', '你好，我是劉同學…\r\n請多指教…', NULL, '2019-12-08 22:03:48', '2019-12-10 18:53:03'),
-(18, 'S006', '張同學', '女', '1995-07-13', '0987666555', '你好，我是張同學…\r\n請多指教…', NULL, '2019-12-10 18:41:50', '2019-12-10 18:53:04');
 
 -- --------------------------------------------------------
 
@@ -457,12 +414,6 @@ ALTER TABLE `orderlist`
   ADD PRIMARY KEY (`orderId`);
 
 --
--- 資料表索引 `outlist`
---
-ALTER TABLE `outlist`
-  ADD PRIMARY KEY (`outId`);
-
---
 -- 資料表索引 `payment`
 --
 ALTER TABLE `payment`
@@ -481,12 +432,6 @@ ALTER TABLE `returnlist`
   ADD PRIMARY KEY (`returnId`);
 
 --
--- 資料表索引 `students`
---
-ALTER TABLE `students`
-  ADD PRIMARY KEY (`id`);
-
---
 -- 在傾印的資料表使用自動遞增(AUTO_INCREMENT)
 --
 
@@ -500,13 +445,7 @@ ALTER TABLE `admin`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `orderlist`
 --
 ALTER TABLE `orderlist`
-  MODIFY `orderId` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
-
---
--- 使用資料表自動遞增(AUTO_INCREMENT) `outlist`
---
-ALTER TABLE `outlist`
-  MODIFY `outId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `orderId` int(100) NOT NULL AUTO_INCREMENT COMMENT '訂單編號', AUTO_INCREMENT=97;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `payment`
@@ -518,13 +457,7 @@ ALTER TABLE `payment`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `returnlist`
 --
 ALTER TABLE `returnlist`
-  MODIFY `returnId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- 使用資料表自動遞增(AUTO_INCREMENT) `students`
---
-ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號', AUTO_INCREMENT=19;
+  MODIFY `returnId` int(11) NOT NULL AUTO_INCREMENT COMMENT '退貨編號', AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
