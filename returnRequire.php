@@ -45,7 +45,7 @@ if($checkAll>=1){
 }
 
 
-//更新orderdetail
+// 更新orderdetail
 $sql_returnDetail="UPDATE `returnlist` SET `returnStatus`='退貨完成' WHERE `returnId`=? ";
 
 $stmt=$pdo->prepare($sql_returnDetail);
@@ -54,6 +54,7 @@ $arr_returnDetail=[
     $_POST["returnId"]
 ];
 $stmt->execute($arr_returnDetail);
+
 $sql_Updateorderdetail="UPDATE `orderdetail` SET `outStatus`='退貨完成' WHERE `orderId`=? AND `pId`=?";
 $stmt=$pdo->prepare($sql_Updateorderdetail);
 for($i=0;$i<count($_POST["pId"]);$i++){
@@ -88,9 +89,9 @@ for($i=0;$i<count($_POST["pId"]);$i++){
     $stmt->execute($arr_DelreturnId2);
 }
 
-echo "<pre>";
-print_r($checkAll);
-echo "</pre>";
+// echo "<pre>";
+// print_r($checkAll);
+// echo "</pre>";
 // exit();
 
 ?>
