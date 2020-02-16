@@ -165,7 +165,7 @@ error_reporting(0); //忽略錯誤
                     }
                 }).done(function(json){
                     alert(json)
-                    
+                    window.location.reload()
                 })
             }else{
                 alert('購物車沒有任何商品');
