@@ -46,10 +46,6 @@ $_SESSION['orderId']=$_GET['orderId'];
                    border:1px solid #eee;
                    text-align:center;
                }
-               img {
-                   width:6em;
-                   height:6em;
-               }
                .tspan{
                    font-size:2em;
                    color:#f00;

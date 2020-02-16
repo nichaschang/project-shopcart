@@ -72,17 +72,14 @@ if(isset($_POST['csId'])){
             if($(this).is(":checked")){
                 let orderId=$(this).closest("tr").find(".orderId").text()
                 $.ajax({
-                method:"POST",
-                url:"outlist2.php",
-                data:{
-                    "orderId":orderId
-                }
-            }).done(function(json){
-                alert(json)
-                // location.reload(json);
-            })
-            }else{
-                console.log(456)
+                    method:"POST",
+                    url:"outlist2.php",
+                    data:{
+                        "orderId":orderId
+                    }
+                }).done(function(json){
+                window.location.reload(json);
+                })
             }
         })
         
@@ -98,8 +95,7 @@ if(isset($_POST['csId'])){
                     "orderId":orderId
                 }
             }).done(function(json){
-                alert(json)
-                // location.reload(json);
+                location.reload(json);
             })
         })
        
@@ -122,7 +118,6 @@ if(isset($_POST['csId'])){
                }
                td {
                 padding:15px;
-                /* border:1px solid #eee; */
                }
                input {
                    border:1px solid #eee;
@@ -132,33 +127,11 @@ if(isset($_POST['csId'])){
                    width:6em;
                    height:6em;
                }
-               .tspan{
-                   font-size:2em;
-                   color:#f00;
-                   padding-left:10px;
-               }
-               .f-right{
-                   float:right;
-                   margin-right:30px;
-               }
                #check_out a{
                 color:#000;
                }
-               .color {
-                   background: #eee;
-                }
                 .minWidth {
                     width:5%;
-                    /* border-right:1px solid #eee; */
-                }
-                .mWidth{
-                    width:15%;
-                }
-                .btnTop{
-                    float:right;
-                }
-                .allCheck_list a {
-                    color:#fff;
                 }
            </style>
 </head>
@@ -360,27 +333,7 @@ if(isset($_POST['csId'])){
     <script src="js/plugins/datapicker/bootstrap-datepicker.js"></script>
 
 
-    <script>
-        $(document).ready(function() {
-
-            $('#date_added').datepicker({
-                todayBtn: "linked",
-                keyboardNavigation: false,
-                forceParse: false,
-                calendarWeeks: true,
-                autoclose: true
-            });
-
-            $('#date_modified').datepicker({
-                todayBtn: "linked",
-                keyboardNavigation: false,
-                forceParse: false,
-                calendarWeeks: true,
-                autoclose: true
-            });
-        });
-
-    </script>
+    
 </body>
 
 </html>
