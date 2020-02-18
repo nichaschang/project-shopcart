@@ -37,7 +37,7 @@ for($i=0;$i<count($_POST['DpId']);$i++){
 }         
 
 //產生訂單
-$sql_order="INSERT INTO `orderlist`(`csId`,`total`,`paymentType`,`shippingWay`,`outStatus`) VALUES (?,?,?,?,'訂單成立')";
+$sql_order="INSERT INTO `orderlist`(`csId`,`total`,`paymentType`,`shippingWay`,`outStatus`,`marketingType`) VALUES (?,?,?,?,'訂單成立','')";
 
 $arr_order=[
     $csId,
@@ -50,7 +50,7 @@ $stmt->execute($arr_order);
 $orderId = $pdo->lastInsertId();
 
 //將 `shopcart`與`orderlist`的資料傳給`orderdetail`
-$sql_insertCount="INSERT INTO `orderdetail` (`orderId`,`pId`,`count`) VALUES (?,?,?)";
+$sql_insertCount="INSERT INTO `orderdetail` (`orderId`,`pId`,`count`,`outStatus`) VALUES (?,?,?,'')";
 $stmt=$pdo->prepare($sql_insertCount);
 for($i=0;$i<count($_POST['pId']);$i++){
     $arr1_insertCount=[
